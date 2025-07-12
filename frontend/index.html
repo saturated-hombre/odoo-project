@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReWear - Sustainable Clothing Exchange Platform</title>
+    <meta name="description" content="Join ReWear to swap clothing items and promote sustainable fashion. Exchange clothes through direct swaps or points-based system.">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <!-- New abstract logo SVG -->
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2" y="2" width="24" height="24" rx="7" fill="#5A5A5A"/>
+                          <circle cx="14" cy="14" r="7" fill="#8F8F8F"/>
+                          <rect x="8" y="8" width="12" height="12" rx="6" fill="#23272A"/>
+                        </svg>
+                    </div>
+                    ReWear
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link active">Home</a></li>
+                    <li><a href="/browse" class="nav-link">Browse Items</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <div class="user-menu" id="userMenu">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Swap Clothes, Save the Planet</h1>
+            <p>Join thousands of people exchanging clothing items sustainably. Reduce waste, save money, and discover unique fashion pieces.</p>
+            
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search for clothing items..." id="searchInput">
+                <button class="search-btn" onclick="searchItems()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="mt-4">
+                <a href="/browse" class="btn btn-secondary btn-lg">Start Browsing</a>
+                <a href="/register" class="btn btn-outline btn-lg" style="color: white; border-color: white; margin-left: 1rem;">Join Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="text-center mb-4">Browse by Category</h2>
+            <div class="grid grid-3">
+                <div class="category-card" onclick="filterByCategory('Tops')">
+                    <div class="category-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3>Tops</h3>
+                    <p>Shirts, blouses, sweaters, and more</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('Bottoms')">
+                    <div class="category-icon">
+                        <i class="fas fa-socks"></i>
+                    </div>
+                    <h3>Bottoms</h3>
+                    <p>Pants, skirts, shorts, and jeans</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('Dresses')">
+                    <div class="category-icon">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <h3>Dresses</h3>
+                    <p>Casual, formal, and party dresses</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('Outerwear')">
+                    <div class="category-icon">
+                        <i class="fas fa-mitten"></i>
+                    </div>
+                    <h3>Outerwear</h3>
+                    <p>Jackets, coats, and winter wear</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('Shoes')">
+                    <div class="category-icon">
+                        <i class="fas fa-shoe-prints"></i>
+                    </div>
+                    <h3>Shoes</h3>
+                    <p>Sneakers, heels, boots, and sandals</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('Accessories')">
+                    <div class="category-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Accessories</h3>
+                    <p>Bags, jewelry, scarves, and hats</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Items Section -->
+    <section class="p-4">
+        <div class="container">
+            <h2 class="text-center mb-4">Featured Items</h2>
+            <div class="grid grid-4" id="featuredItems">
+                <!-- Featured items will be loaded here -->
+                <div class="spinner"></div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="/browse" class="btn btn-primary">View All Items</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="p-4" style="background: var(--card-color);">
+        <div class="container">
+            <h2 class="text-center mb-4">How ReWear Works</h2>
+            <div class="grid grid-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="category-icon" style="margin-bottom: 1rem;">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <h3>1. List Your Items</h3>
+                        <p>Upload photos and details of clothing you no longer wear. Set your points value or choose direct swap.</p>
+                    </div>
+                </div>
+                
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="category-icon" style="margin-bottom: 1rem;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>2. Browse & Request</h3>
+                        <p>Search through thousands of items. Request swaps with points or offer your own items in exchange.</p>
+                    </div>
+                </div>
+                
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="category-icon" style="margin-bottom: 1rem;">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>3. Complete Swap</h3>
+                        <p>Once both parties agree, arrange meetup or shipping. Rate your experience and earn points.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="p-4">
+        <div class="container">
+            <h2 class="text-center mb-4">Why Choose ReWear?</h2>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h3><i class="fas fa-leaf" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Environmental Impact</h3>
+                        <p>Reduce textile waste and carbon footprint. Every swap saves resources and reduces landfill waste.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <h3><i class="fas fa-wallet" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Save Money</h3>
+                        <p>Get new clothes without spending money. Use points or direct swaps to refresh your wardrobe.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <h3><i class="fas fa-users" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Community</h3>
+                        <p>Join a community of fashion-conscious individuals who care about sustainability and style.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <h3><i class="fas fa-shield-alt" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Safe & Secure</h3>
+                        <p>Verified users, secure transactions, and community ratings ensure safe and reliable swaps.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ReWear</h3>
+                    <p>Discover, swap, and refresh your wardrobe. ReWear is your modern clothing exchange for unique style and smart fashion.</p>
+                    <div class="mt-2">
+                        <a href="#" style="color: #ccc; margin-right: 1rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: #ccc; margin-right: 1rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: #ccc; margin-right: 1rem;"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/browse">Browse Items</a></li>
+                        <li><a href="/add-item">List Item</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="/browse?category=Tops">Tops</a></li>
+                        <li><a href="/browse?category=Bottoms">Bottoms</a></li>
+                        <li><a href="/browse?category=Dresses">Dresses</a></li>
+                        <li><a href="/browse?category=Outerwear">Outerwear</a></li>
+                        <li><a href="/browse?category=Shoes">Shoes</a></li>
+                        <li><a href="/browse?category=Accessories">Accessories</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/safety">Safety Guidelines</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ReWear. All rights reserved. Made with ❤️ for a sustainable future.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadFeaturedItems();
+        });
+
+        function searchItems() {
+            const query = document.getElementById('searchInput').value;
+            if (query.trim()) {
+                window.location.href = `/browse?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function filterByCategory(category) {
+            window.location.href = `/browse?category=${encodeURIComponent(category)}`;
+        }
+
+        async function loadFeaturedItems() {
+            try {
+                const response = await fetch('/api/items?limit=8&sort=popular');
+                const data = await response.json();
+                
+                const featuredContainer = document.getElementById('featuredItems');
+                featuredContainer.innerHTML = '';
+                
+                data.items.forEach(item => {
+                    const itemCard = createItemCard(item);
+                    featuredContainer.appendChild(itemCard);
+                });
+            } catch (error) {
+                console.error('Error loading featured items:', error);
+                document.getElementById('featuredItems').innerHTML = '<p class="text-center">Unable to load featured items</p>';
+            }
+        }
+
+        function createItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'card product-card';
+            card.onclick = () => window.location.href = `/item/${item._id}`;
+            
+            card.innerHTML = `
+                <img src="${item.images[0] || '/images/placeholder.jpg'}" alt="${item.title}" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">${item.title}</h3>
+                    <p class="product-description">${item.description.substring(0, 100)}...</p>
+                    <div class="product-meta">
+                        <span class="product-points">${item.pointsValue} pts</span>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>${item.uploaderId.rating || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+    </script>
+</body>
+</html> 

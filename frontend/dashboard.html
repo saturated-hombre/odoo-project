@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            padding: 2rem 0;
+        }
+        
+        .dashboard-header {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+        }
+        
+        .profile-info h1 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            background: var(--background-color);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-tabs {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: var(--background-color);
+        }
+        
+        .tab-content {
+            padding: 2rem;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .swap-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .swap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .swap-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .swap-status.pending { background: #FFF3CD; color: #856404; }
+        .swap-status.accepted { background: #D4EDDA; color: #155724; }
+        .swap-status.rejected { background: #F8D7DA; color: #721C24; }
+        .swap-status.completed { background: #D1ECF1; color: #0C5460; }
+        
+        .swap-items {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .swap-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .swap-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 0.5rem;
+        }
+        
+        .swap-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .tab-nav {
+                flex-direction: column;
+            }
+            
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <!-- New abstract logo SVG -->
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2" y="2" width="24" height="24" rx="7" fill="#5A5A5A"/>
+                          <circle cx="14" cy="14" r="7" fill="#8F8F8F"/>
+                          <rect x="8" y="8" width="12" height="12" rx="6" fill="#23272A"/>
+                        </svg>
+                    </div>
+                    ReWear
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/browse" class="nav-link">Browse Items</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <div class="user-menu" id="userMenu">
+                    <!-- Will be populated by auth.js -->
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="profile-section">
+                    <img id="profileAvatar" src="/images/default-avatar.png" alt="Profile" class="profile-avatar">
+                    <div class="profile-info">
+                        <h1 id="userName">Loading...</h1>
+                        <p id="userLocation">Location not set</p>
+                        <p>Member since <span id="joinDate">...</span></p>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="userPoints">0</div>
+                                <div class="stat-label">Points</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="itemsListed">0</div>
+                                <div class="stat-label">Items Listed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="swapsCompleted">0</div>
+                                <div class="stat-label">Swaps Completed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="userRating">0</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <a href="/add-item" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Item
+                    </a>
+                    <a href="/profile" class="btn btn-outline">
+                        <i class="fas fa-user-edit"></i> Edit Profile
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Dashboard Tabs -->
+            <div class="dashboard-tabs">
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="showTab('listings')">
+                        <i class="fas fa-list"></i> My Listings
+                    </button>
+                    <button class="tab-btn" onclick="showTab('swaps')">
+                        <i class="fas fa-exchange-alt"></i> My Swaps
+                    </button>
+                    <button class="tab-btn" onclick="showTab('requests')">
+                        <i class="fas fa-inbox"></i> Swap Requests
+                    </button>
+                    <button class="tab-btn" onclick="showTab('activity')">
+                        <i class="fas fa-chart-line"></i> Activity
+                    </button>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- My Listings Tab -->
+                    <div id="listings" class="tab-pane active">
+                        <div class="d-flex justify-between align-center mb-3">
+                            <h3>My Listed Items</h3>
+                            <a href="/add-item" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Add Item
+                            </a>
+                        </div>
+                        <div id="listingsContainer" class="items-grid">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- My Swaps Tab -->
+                    <div id="swaps" class="tab-pane">
+                        <h3>My Swap History</h3>
+                        <div id="swapsContainer">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Swap Requests Tab -->
+                    <div id="requests" class="tab-pane">
+                        <h3>Incoming Swap Requests</h3>
+                        <div id="requestsContainer">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Tab -->
+                    <div id="activity" class="tab-pane">
+                        <h3>Recent Activity</h3>
+                        <div id="activityContainer">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ReWear</h3>
+                    <p>Promoting sustainable fashion through clothing exchange.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/browse">Browse Items</a></li>
+                        <li><a href="/add-item">List Item</a></li>
+                        <li><a href="/profile">Profile</a></li>
+                        <li><a href="/help">Help</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ReWear. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isAuthenticated()) {
+                window.location.href = '/login?redirect=/dashboard';
+                return;
+            }
+            
+            checkAuthStatus();
+            loadDashboard();
+        });
+        
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const response = await apiRequest('/api/auth/profile');
+                if (response && response.ok) {
+                    const user = await response.json();
+                    displayDashboard(user);
+                    loadUserListings();
+                    loadUserSwaps();
+                    loadSwapRequests();
+                    loadActivity();
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showToast('Failed to load dashboard data', 'error');
+            }
+        }
+        
+        // Display dashboard with user data
+        function displayDashboard(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userLocation').textContent = user.location || 'Location not set';
+            document.getElementById('joinDate').textContent = formatDate(user.joinDate);
+            document.getElementById('userPoints').textContent = user.points;
+            document.getElementById('itemsListed').textContent = user.itemsListed;
+            document.getElementById('swapsCompleted').textContent = user.swapsCompleted;
+            document.getElementById('userRating').textContent = user.rating.toFixed(1);
+            
+            if (user.profilePicture) {
+                document.getElementById('profileAvatar').src = user.profilePicture;
+            }
+        }
+        
+        // Load user's listings
+        async function loadUserListings() {
+            try {
+                const response = await apiRequest('/api/items?uploaderId=me');
+                if (response && response.ok) {
+                    const data = await response.json();
+                    displayListings(data.items);
+                }
+            } catch (error) {
+                console.error('Error loading listings:', error);
+            }
+        }
+        
+        // Display user's listings
+        function displayListings(items) {
+            const container = document.getElementById('listingsContainer');
+            
+            if (!items || items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No items listed yet</h3>
+                        <p>Start by adding your first clothing item to the platform.</p>
+                        <a href="/add-item" class="btn btn-primary">Add Your First Item</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = items.map(item => `
+                <div class="card product-card">
+                    <img src="${item.images[0] || '/images/placeholder.jpg'}" alt="${item.title}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">${item.title}</h3>
+                        <p class="product-description">${item.description.substring(0, 100)}...</p>
+                        <div class="product-meta">
+                            <span class="product-points">${item.pointsValue} pts</span>
+                            <span class="badge ${item.isAvailable ? 'success' : 'warning'}">${item.isAvailable ? 'Available' : 'Unavailable'}</span>
+                        </div>
+                        <div class="d-flex gap-2 mt-2">
+                            <button onclick="editItem('${item._id}')" class="btn btn-outline btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="deleteItem('${item._id}')" class="btn btn-outline btn-sm" style="color: var(--error-color);">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Load user's swaps
+        async function loadUserSwaps() {
+            try {
+                const response = await apiRequest('/api/swaps?type=all');
+                if (response && response.ok) {
+                    const swaps = await response.json();
+                    displaySwaps(swaps);
+                }
+            } catch (error) {
+                console.error('Error loading swaps:', error);
+            }
+        }
+        
+        // Display user's swaps
+        function displaySwaps(swaps) {
+            const container = document.getElementById('swapsContainer');
+            
+            if (!swaps || swaps.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exchange-alt"></i>
+                        <h3>No swaps yet</h3>
+                        <p>Start browsing items to make your first swap!</p>
+                        <a href="/browse" class="btn btn-primary">Browse Items</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = swaps.map(swap => `
+                <div class="swap-card">
+                    <div class="swap-header">
+                        <span class="swap-status ${swap.status}">${swap.status.toUpperCase()}</span>
+                        <small>${formatRelativeTime(swap.dateCreated)}</small>
+                    </div>
+                    <div class="swap-items">
+                        <div class="swap-item">
+                            <img src="${swap.itemId.images[0] || '/images/placeholder.jpg'}" alt="${swap.itemId.title}">
+                            <div>${swap.itemId.title}</div>
+                        </div>
+                        <div class="swap-item">
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; color: #ccc;"></i>
+                        </div>
+                        ${swap.offeredItemId ? `
+                            <div class="swap-item">
+                                <img src="${swap.offeredItemId.images[0] || '/images/placeholder.jpg'}" alt="${swap.offeredItemId.title}">
+                                <div>${swap.offeredItemId.title}</div>
+                            </div>
+                        ` : `
+                            <div class="swap-item">
+                                <div style="font-size: 2rem; color: var(--primary-color);">${swap.pointsOffered}</div>
+                                <div>points</div>
+                            </div>
+                        `}
+                    </div>
+                    ${swap.message && `<p><strong>Message:</strong> ${swap.message}</p>`}
+                </div>
+            `).join('');
+        }
+        
+        // Load swap requests
+        async function loadSwapRequests() {
+            try {
+                const response = await apiRequest('/api/swaps?type=incoming&status=pending');
+                if (response && response.ok) {
+                    const requests = await response.json();
+                    displayRequests(requests);
+                }
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            }
+        }
+        
+        // Display swap requests
+        function displayRequests(requests) {
+            const container = document.getElementById('requestsContainer');
+            
+            if (!requests || requests.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No pending requests</h3>
+                        <p>You don't have any pending swap requests at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = requests.map(request => `
+                <div class="swap-card">
+                    <div class="swap-header">
+                        <span class="swap-status pending">PENDING</span>
+                        <small>${formatRelativeTime(request.dateCreated)}</small>
+                    </div>
+                    <p><strong>From:</strong> ${request.requesterId.name}</p>
+                    <div class="swap-items">
+                        <div class="swap-item">
+                            <img src="${request.itemId.images[0] || '/images/placeholder.jpg'}" alt="${request.itemId.title}">
+                            <div>${request.itemId.title}</div>
+                        </div>
+                        <div class="swap-item">
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; color: #ccc;"></i>
+                        </div>
+                        ${request.offeredItemId ? `
+                            <div class="swap-item">
+                                <img src="${request.offeredItemId.images[0] || '/images/placeholder.jpg'}" alt="${request.offeredItemId.title}">
+                                <div>${request.offeredItemId.title}</div>
+                            </div>
+                        ` : `
+                            <div class="swap-item">
+                                <div style="font-size: 2rem; color: var(--primary-color);">${request.pointsOffered}</div>
+                                <div>points</div>
+                            </div>
+                        `}
+                    </div>
+                    ${request.message && `<p><strong>Message:</strong> ${request.message}</p>`}
+                    <div class="swap-actions">
+                        <button onclick="acceptSwap('${request._id}')" class="btn btn-primary btn-sm">Accept</button>
+                        <button onclick="rejectSwap('${request._id}')" class="btn btn-outline btn-sm">Reject</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Load activity
+        async function loadActivity() {
+            const container = document.getElementById('activityContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Activity tracking coming soon</h3>
+                    <p>We're working on bringing you detailed activity insights.</p>
+                </div>
+            `;
+        }
+        
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab panes
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            
+            // Remove active class from all tab buttons
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab pane
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+        
+        // Item actions
+        function editItem(itemId) {
+            window.location.href = `/edit-item/${itemId}`;
+        }
+        
+        async function deleteItem(itemId) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                try {
+                    const response = await apiRequest(`/api/items/${itemId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response && response.ok) {
+                        showToast('Item deleted successfully', 'success');
+                        loadUserListings();
+                    } else {
+                        showToast('Failed to delete item', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                    showToast('Network error', 'error');
+                }
+            }
+        }
+        
+        // Swap actions
+        async function acceptSwap(swapId) {
+            try {
+                const response = await apiRequest(`/api/swaps/${swapId}/accept`, {
+                    method: 'PUT'
+                });
+                
+                if (response && response.ok) {
+                    showToast('Swap request accepted', 'success');
+                    loadSwapRequests();
+                    loadUserSwaps();
+                } else {
+                    showToast('Failed to accept swap request', 'error');
+                }
+            } catch (error) {
+                console.error('Error accepting swap:', error);
+                showToast('Network error', 'error');
+            }
+        }
+        
+        async function rejectSwap(swapId) {
+            try {
+                const response = await apiRequest(`/api/swaps/${swapId}/reject`, {
+                    method: 'PUT'
+                });
+                
+                if (response && response.ok) {
+                    showToast('Swap request rejected', 'success');
+                    loadSwapRequests();
+                } else {
+                    showToast('Failed to reject swap request', 'error');
+                }
+            } catch (error) {
+                console.error('Error rejecting swap:', error);
+                showToast('Network error', 'error');
+            }
+        }
+    </script>
+</body>
+</html> 

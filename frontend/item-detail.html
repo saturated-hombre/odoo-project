@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .item-detail-container {
+            padding: 2rem 0;
+        }
+        
+        .item-gallery {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+        
+        .image-thumbnails {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .thumbnail.active {
+            border-color: var(--primary-color);
+        }
+        
+        .item-info {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .item-header {
+            margin-bottom: 2rem;
+        }
+        
+        .item-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+        
+        .item-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .item-points {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .item-category {
+            background: var(--secondary-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .detail-item {
+            padding: 1rem;
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-value {
+            color: #666;
+        }
+        
+        .item-description {
+            margin-bottom: 2rem;
+        }
+        
+        .item-description h3 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .owner-info {
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .owner-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .owner-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .owner-details h4 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .owner-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+        }
+        
+        .related-items {
+            margin-top: 3rem;
+        }
+        
+        .related-items h3 {
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .item-actions {
+                flex-direction: column;
+            }
+            
+            .item-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <!-- New abstract logo SVG -->
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2" y="2" width="24" height="24" rx="7" fill="#5A5A5A"/>
+                          <circle cx="14" cy="14" r="7" fill="#8F8F8F"/>
+                          <rect x="8" y="8" width="12" height="12" rx="6" fill="#23272A"/>
+                        </svg>
+                    </div>
+                    ReWear
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/browse" class="nav-link">Browse Items</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <div class="user-menu" id="userMenu">
+                    <!-- Will be populated by auth.js -->
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Item Detail Content -->
+    <div class="item-detail-container">
+        <div class="container">
+            <div id="itemContainer">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ReWear</h3>
+                    <p>Promoting sustainable fashion through clothing exchange.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/browse">Browse Items</a></li>
+                        <li><a href="/add-item">List Item</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ReWear. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Get item ID from URL
+        const itemId = window.location.pathname.split('/').pop();
+        
+        // Load item details on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadItemDetails();
+        });
+        
+        // Load item details
+        async function loadItemDetails() {
+            const itemContainer = document.getElementById('itemContainer');
+            
+            try {
+                const response = await fetch(`/api/items/${itemId}`);
+                const item = await response.json();
+                
+                if (response.ok) {
+                    displayItemDetails(item);
+                } else {
+                    showError('Item not found', itemContainer);
+                }
+            } catch (error) {
+                console.error('Error loading item details:', error);
+                showError('Network error. Please try again.', itemContainer);
+            }
+        }
+        
+        // Display item details
+        function displayItemDetails(item) {
+            const itemContainer = document.getElementById('itemContainer');
+            const user = getCurrentUser();
+            const isOwner = user && user._id === item.uploaderId._id;
+            
+            itemContainer.innerHTML = `
+                <div class="row">
+                    <div class="col-6">
+                        <div class="item-gallery">
+                            <img src="${item.images[0] || '/images/placeholder.jpg'}" alt="${item.title}" class="main-image" id="mainImage">
+                            ${item.images.length > 1 ? `
+                                <div class="image-thumbnails">
+                                    ${item.images.map((image, index) => `
+                                        <img src="${image}" alt="${item.title}" class="thumbnail ${index === 0 ? 'active' : ''}" 
+                                             onclick="changeMainImage('${image}', this)">
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="col-6">
+                        <div class="item-info">
+                            <div class="item-header">
+                                <h1 class="item-title">${item.title}</h1>
+                                <div class="item-meta">
+                                    <span class="item-points">${item.pointsValue} points</span>
+                                    <span class="item-category">${item.category}</span>
+                                </div>
+                                <p class="text-muted">Listed by ${item.uploaderName}</p>
+                            </div>
+                            
+                            <div class="item-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Size</div>
+                                    <div class="detail-value">${item.size}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Condition</div>
+                                    <div class="detail-value">${item.condition}</div>
+                                </div>
+                                ${item.brand ? `
+                                    <div class="detail-item">
+                                        <div class="detail-label">Brand</div>
+                                        <div class="detail-value">${item.brand}</div>
+                                    </div>
+                                ` : ''}
+                                ${item.color ? `
+                                    <div class="detail-item">
+                                        <div class="detail-label">Color</div>
+                                        <div class="detail-value">${item.color}</div>
+                                    </div>
+                                ` : ''}
+                                ${item.material ? `
+                                    <div class="detail-item">
+                                        <div class="detail-label">Material</div>
+                                        <div class="detail-value">${item.material}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="item-description">
+                                <h3>Description</h3>
+                                <p>${item.description}</p>
+                            </div>
+                            
+                            ${!isOwner && isAuthenticated() ? `
+                                <div class="item-actions">
+                                    <button onclick="requestSwap('${item._id}')" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-exchange-alt"></i> Request Swap
+                                    </button>
+                                    <button onclick="likeItem('${item._id}')" class="btn btn-outline btn-lg">
+                                        <i class="fas fa-heart"></i> Like
+                                    </button>
+                                </div>
+                            ` : !isAuthenticated() ? `
+                                <div class="item-actions">
+                                    <a href="/login?redirect=${window.location.pathname}" class="btn btn-primary btn-lg">
+                                        Login to Request Swap
+                                    </a>
+                                </div>
+                            ` : `
+                                <div class="item-actions">
+                                    <button onclick="editItem('${item._id}')" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-edit"></i> Edit Item
+                                    </button>
+                                    <button onclick="deleteItem('${item._id}')" class="btn btn-outline btn-lg" style="color: var(--error-color);">
+                                        <i class="fas fa-trash"></i> Delete Item
+                                    </button>
+                                </div>
+                            `}
+                            
+                            <div class="owner-info">
+                                <div class="owner-header">
+                                    <img src="${item.uploaderId.profilePicture || '/images/default-avatar.png'}" alt="${item.uploaderId.name}" class="owner-avatar">
+                                    <div class="owner-details">
+                                        <h4>${item.uploaderId.name}</h4>
+                                        <div class="owner-rating">
+                                            <i class="fas fa-star"></i>
+                                            <span>${item.uploaderId.rating || 0} (${item.uploaderId.swapsCompleted || 0} swaps)</span>
+                                        </div>
+                                        <small class="text-muted">Member since ${formatDate(item.uploaderId.joinDate)}</small>
+                                    </div>
+                                </div>
+                                ${item.uploaderId.location ? `<p><i class="fas fa-map-marker-alt"></i> ${item.uploaderId.location}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="related-items">
+                    <h3>More from this user</h3>
+                    <div id="relatedItems" class="grid grid-4">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Load related items
+            loadRelatedItems(item.uploaderId._id, item._id);
+        }
+        
+        // Change main image
+        function changeMainImage(imageSrc, thumbnail) {
+            document.getElementById('mainImage').src = imageSrc;
+            
+            // Update active thumbnail
+            document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+            thumbnail.classList.add('active');
+        }
+        
+        // Load related items
+        async function loadRelatedItems(uploaderId, currentItemId) {
+            try {
+                const response = await fetch(`/api/items?uploaderId=${uploaderId}&limit=4`);
+                const data = await response.json();
+                
+                const relatedContainer = document.getElementById('relatedItems');
+                const relatedItems = data.items.filter(item => item._id !== currentItemId);
+                
+                if (relatedItems.length === 0) {
+                    relatedContainer.innerHTML = '<p class="text-center">No other items from this user</p>';
+                    return;
+                }
+                
+                relatedContainer.innerHTML = relatedItems.map(item => `
+                    <div class="card product-card" onclick="window.location.href='/item/${item._id}'">
+                        <img src="${item.images[0] || '/images/placeholder.jpg'}" alt="${item.title}" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">${item.title}</h3>
+                            <div class="product-meta">
+                                <span class="product-points">${item.pointsValue} pts</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading related items:', error);
+            }
+        }
+        
+        // Request swap
+        function requestSwap(itemId) {
+            if (!isAuthenticated()) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            // Show swap request modal
+            showSwapRequestModal(itemId);
+        }
+        
+        // Like item
+        async function likeItem(itemId) {
+            if (!isAuthenticated()) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            try {
+                const response = await apiRequest(`/api/items/${itemId}/like`, {
+                    method: 'POST'
+                });
+                
+                if (response && response.ok) {
+                    const data = await response.json();
+                    showToast(`Item ${data.isLiked ? 'liked' : 'unliked'} successfully`, 'success');
+                }
+            } catch (error) {
+                console.error('Error liking item:', error);
+                showToast('Failed to like item', 'error');
+            }
+        }
+        
+        // Edit item (owner only)
+        function editItem(itemId) {
+            window.location.href = `/edit-item/${itemId}`;
+        }
+        
+        // Delete item (owner only)
+        async function deleteItem(itemId) {
+            if (confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
+                try {
+                    const response = await apiRequest(`/api/items/${itemId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response && response.ok) {
+                        showToast('Item deleted successfully', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 1000);
+                    } else {
+                        showToast('Failed to delete item', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                    showToast('Network error', 'error');
+                }
+            }
+        }
+        
+        // Show swap request modal
+        function showSwapRequestModal(itemId) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Request Swap</h3>
+                        <button onclick="closeModal()" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="swapRequestForm">
+                            <div class="form-group">
+                                <label>Swap Type</label>
+                                <select id="swapType" class="form-control" required>
+                                    <option value="points">Points Swap</option>
+                                    <option value="direct">Direct Swap</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="pointsGroup">
+                                <label>Points to Offer</label>
+                                <input type="number" id="pointsOffered" class="form-control" min="1" required>
+                            </div>
+                            
+                            <div class="form-group" id="directGroup" style="display: none;">
+                                <label>Your Item to Offer</label>
+                                <select id="offeredItem" class="form-control">
+                                    <option value="">Select an item...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Message (Optional)</label>
+                                <textarea id="swapMessage" class="form-control" rows="3" placeholder="Add a message to the item owner..."></textarea>
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="button" onclick="closeModal()" class="btn btn-outline">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Send Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Handle swap type change
+            document.getElementById('swapType').addEventListener('change', function() {
+                const pointsGroup = document.getElementById('pointsGroup');
+                const directGroup = document.getElementById('directGroup');
+                
+                if (this.value === 'points') {
+                    pointsGroup.style.display = 'block';
+                    directGroup.style.display = 'none';
+                } else {
+                    pointsGroup.style.display = 'none';
+                    directGroup.style.display = 'block';
+                    loadUserItems();
+                }
+            });
+            
+            // Handle form submission
+            document.getElementById('swapRequestForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitSwapRequest(itemId);
+            });
+        }
+        
+        // Close modal
+        function closeModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // Submit swap request
+        async function submitSwapRequest(itemId) {
+            const swapType = document.getElementById('swapType').value;
+            const pointsOffered = document.getElementById('pointsOffered').value;
+            const offeredItem = document.getElementById('offeredItem').value;
+            const message = document.getElementById('swapMessage').value;
+            
+            try {
+                const swapData = {
+                    itemId,
+                    swapType,
+                    message
+                };
+                
+                if (swapType === 'points') {
+                    swapData.pointsOffered = parseInt(pointsOffered);
+                } else if (swapType === 'direct') {
+                    swapData.offeredItemId = offeredItem;
+                }
+                
+                const response = await apiRequest('/api/swaps', {
+                    method: 'POST',
+                    body: JSON.stringify(swapData)
+                });
+                
+                if (response && response.ok) {
+                    showToast('Swap request sent successfully!', 'success');
+                    closeModal();
+                } else {
+                    const data = await response.json();
+                    showToast(data.message || 'Failed to send swap request', 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting swap request:', error);
+                showToast('Network error. Please try again.', 'error');
+            }
+        }
+        
+        // Load user's items for direct swap
+        async function loadUserItems() {
+            try {
+                const response = await apiRequest('/api/items?uploaderId=me');
+                if (response && response.ok) {
+                    const data = await response.json();
+                    const select = document.getElementById('offeredItem');
+                    
+                    select.innerHTML = '<option value="">Select an item...</option>';
+                    data.items.forEach(item => {
+                        select.innerHTML += `<option value="${item._id}">${item.title}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading user items:', error);
+            }
+        }
+    </script>
+</body>
+</html> 

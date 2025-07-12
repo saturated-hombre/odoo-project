@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Items - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .browse-container {
+            padding: 2rem 0;
+        }
+        
+        .filters-sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+        
+        .filter-section h4 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-option input[type="checkbox"] {
+            margin: 0;
+        }
+        
+        .filter-option label {
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        .price-range {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .price-range input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .search-header {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .results-count {
+            color: #666;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .view-btn {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .view-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .view-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .filters-sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <!-- New abstract logo SVG -->
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2" y="2" width="24" height="24" rx="7" fill="#5A5A5A"/>
+                          <circle cx="14" cy="14" r="7" fill="#8F8F8F"/>
+                          <rect x="8" y="8" width="12" height="12" rx="6" fill="#23272A"/>
+                        </svg>
+                    </div>
+                    ReWear
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/browse" class="nav-link active">Browse Items</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <div class="user-menu" id="userMenu">
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Browse Content -->
+    <div class="browse-container">
+        <div class="container">
+            <!-- Search Header -->
+            <div class="search-header">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search for clothing items...">
+                    <button onclick="applyFilters()" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                
+                <div class="filter-controls">
+                    <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option value="Tops">Tops</option>
+                        <option value="Bottoms">Bottoms</option>
+                        <option value="Dresses">Dresses</option>
+                        <option value="Outerwear">Outerwear</option>
+                        <option value="Shoes">Shoes</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    
+                    <select id="sizeFilter" class="filter-select" onchange="applyFilters()">
+                        <option value="">All Sizes</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                        <option value="One Size">One Size</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    
+                    <select id="conditionFilter" class="filter-select" onchange="applyFilters()">
+                        <option value="">All Conditions</option>
+                        <option value="New">New</option>
+                        <option value="Like New">Like New</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                    </select>
+                    
+                    <select id="sortFilter" class="filter-select" onchange="applyFilters()">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="points-low">Points: Low to High</option>
+                        <option value="points-high">Points: High to Low</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                    
+                    <button onclick="clearFilters()" class="btn btn-outline">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- Filters Sidebar -->
+                <div class="col-3">
+                    <div class="filters-sidebar">
+                        <h3>Filters</h3>
+                        
+                        <div class="filter-section">
+                            <h4>Points Range</h4>
+                            <div class="price-range">
+                                <input type="number" id="minPoints" placeholder="Min" min="0">
+                                <span>-</span>
+                                <input type="number" id="maxPoints" placeholder="Max" min="0">
+                            </div>
+                            <button onclick="applyFilters()" class="btn btn-primary btn-sm w-100 mt-2">Apply</button>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Categories</h4>
+                            <div class="filter-options">
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cat-tops" value="Tops">
+                                    <label for="cat-tops">Tops</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cat-bottoms" value="Bottoms">
+                                    <label for="cat-bottoms">Bottoms</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cat-dresses" value="Dresses">
+                                    <label for="cat-dresses">Dresses</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cat-outerwear" value="Outerwear">
+                                    <label for="cat-outerwear">Outerwear</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cat-shoes" value="Shoes">
+                                    <label for="cat-shoes">Shoes</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cat-accessories" value="Accessories">
+                                    <label for="cat-accessories">Accessories</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Sizes</h4>
+                            <div class="filter-options">
+                                <div class="filter-option">
+                                    <input type="checkbox" id="size-xs" value="XS">
+                                    <label for="size-xs">XS</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="size-s" value="S">
+                                    <label for="size-s">S</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="size-m" value="M">
+                                    <label for="size-m">M</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="size-l" value="L">
+                                    <label for="size-l">L</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="size-xl" value="XL">
+                                    <label for="size-xl">XL</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="size-xxl" value="XXL">
+                                    <label for="size-xxl">XXL</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="size-onesize" value="One Size">
+                                    <label for="size-onesize">One Size</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Conditions</h4>
+                            <div class="filter-options">
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cond-new" value="New">
+                                    <label for="cond-new">New</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cond-likenew" value="Like New">
+                                    <label for="cond-likenew">Like New</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cond-good" value="Good">
+                                    <label for="cond-good">Good</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cond-fair" value="Fair">
+                                    <label for="cond-fair">Fair</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="cond-poor" value="Poor">
+                                    <label for="cond-poor">Poor</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Items Grid -->
+                <div class="col-9">
+                    <div class="results-header">
+                        <div class="results-count">
+                            <span id="resultsCount">Loading...</span> items found
+                        </div>
+                        
+                        <div class="view-toggle">
+                            <button class="view-btn active" onclick="setView('grid')">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" onclick="setView('list')">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Items Container -->
+                    <div id="itemsContainer" class="grid grid-4">
+                        <div class="spinner"></div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div id="pagination" class="text-center mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ReWear</h3>
+                    <p>Promoting sustainable fashion through clothing exchange. Join us in reducing textile waste and building a greener future.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/browse">Browse Items</a></li>
+                        <li><a href="/add-item">List Item</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="/browse?category=Tops">Tops</a></li>
+                        <li><a href="/browse?category=Bottoms">Bottoms</a></li>
+                        <li><a href="/browse?category=Dresses">Dresses</a></li>
+                        <li><a href="/browse?category=Outerwear">Outerwear</a></li>
+                        <li><a href="/browse?category=Shoes">Shoes</a></li>
+                        <li><a href="/browse?category=Accessories">Accessories</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/safety">Safety Guidelines</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ReWear. All rights reserved. Made with ❤️ for a sustainable future.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Initialize browse page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadItems();
+            
+            // Set up search input event listener
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        applyFilters();
+                    }
+                });
+            }
+        });
+        
+        // Set view mode (grid/list)
+        function setView(mode) {
+            const container = document.getElementById('itemsContainer');
+            const buttons = document.querySelectorAll('.view-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+            
+            if (mode === 'grid') {
+                container.className = 'grid grid-4';
+            } else {
+                container.className = 'grid grid-1';
+            }
+        }
+        
+        // Update results count
+        function updateResultsCount(count) {
+            const resultsCount = document.getElementById('resultsCount');
+            if (resultsCount) {
+                resultsCount.textContent = count;
+            }
+        }
+    </script>
+</body>
+</html> 

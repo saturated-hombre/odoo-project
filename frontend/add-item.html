@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .add-item-container {
+            padding: 2rem 0;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-header p {
+            color: #666;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--background-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .image-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        
+        .image-upload:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .image-upload.dragover {
+            border-color: var(--primary-color);
+            background: rgba(46, 125, 50, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        
+        .upload-text {
+            margin-bottom: 1rem;
+        }
+        
+        .upload-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .upload-btn:hover {
+            background: #1B5E20;
+        }
+        
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .preview-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tags-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            min-height: 50px;
+        }
+        
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tag-remove {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .tag-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <!-- New abstract logo SVG -->
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2" y="2" width="24" height="24" rx="7" fill="#5A5A5A"/>
+                          <circle cx="14" cy="14" r="7" fill="#8F8F8F"/>
+                          <rect x="8" y="8" width="12" height="12" rx="6" fill="#23272A"/>
+                        </svg>
+                    </div>
+                    ReWear
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/browse" class="nav-link">Browse Items</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <div class="user-menu" id="userMenu">
+                    <!-- Will be populated by auth.js -->
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Add Item Content -->
+    <div class="add-item-container">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <h1>Add New Item</h1>
+                    <p>Share your clothing items with the ReWear community</p>
+                </div>
+                
+                <form id="addItemForm">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="title" class="form-label">Item Title *</label>
+                            <input type="text" id="title" name="title" class="form-control" required 
+                                   placeholder="e.g., Vintage Denim Jacket, Summer Dress">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description *</label>
+                            <textarea id="description" name="description" class="form-control" rows="4" required
+                                      placeholder="Describe your item in detail..."></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="category" class="form-label">Category *</label>
+                                <select id="category" name="category" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Tops">Tops</option>
+                                    <option value="Bottoms">Bottoms</option>
+                                    <option value="Dresses">Dresses</option>
+                                    <option value="Outerwear">Outerwear</option>
+                                    <option value="Shoes">Shoes</option>
+                                    <option value="Accessories">Accessories</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="size" class="form-label">Size *</label>
+                                <select id="size" name="size" class="form-control" required>
+                                    <option value="">Select Size</option>
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                    <option value="One Size">One Size</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="condition" class="form-label">Condition *</label>
+                                <select id="condition" name="condition" class="form-control" required>
+                                    <option value="">Select Condition</option>
+                                    <option value="New">New</option>
+                                    <option value="Like New">Like New</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Poor">Poor</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pointsValue" class="form-label">Points Value *</label>
+                                <input type="number" id="pointsValue" name="pointsValue" class="form-control" required
+                                       min="1" max="1000" placeholder="1-1000">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Images -->
+                    <div class="form-section">
+                        <h3>Images</h3>
+                        <p class="text-muted">Upload clear photos of your item (up to 5 images)</p>
+                        
+                        <div class="image-upload" id="imageUpload">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">
+                                <p>Drag and drop images here, or</p>
+                                <button type="button" class="upload-btn" onclick="document.getElementById('imageInput').click()">
+                                    Choose Files
+                                </button>
+                            </div>
+                            <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                        </div>
+                        
+                        <div class="image-preview" id="imagePreview"></div>
+                        <div class="progress-bar" id="progressBar" style="display: none;">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Details -->
+                    <div class="form-section">
+                        <h3>Additional Details</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="brand" class="form-label">Brand</label>
+                                <input type="text" id="brand" name="brand" class="form-control" 
+                                       placeholder="e.g., Nike, Zara, Vintage">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="color" class="form-label">Color</label>
+                                <input type="text" id="color" name="color" class="form-control" 
+                                       placeholder="e.g., Blue, Red, Black">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="material" class="form-label">Material</label>
+                            <input type="text" id="material" name="material" class="form-control" 
+                                   placeholder="e.g., Cotton, Denim, Silk">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tags" class="form-label">Tags</label>
+                            <div class="tags-input" id="tagsInput">
+                                <input type="text" class="tag-input" id="tagInput" placeholder="Add tags...">
+                            </div>
+                            <small class="form-text">Press Enter to add tags</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" onclick="window.history.back()" class="btn btn-outline">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ReWear</h3>
+                    <p>Promoting sustainable fashion through clothing exchange.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/browse">Browse Items</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li><a href="/help">Help</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ReWear. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isAuthenticated()) {
+                window.location.href = '/login?redirect=/add-item';
+                return;
+            }
+            
+            checkAuthStatus();
+            setupImageUpload();
+            setupTagsInput();
+        });
+        
+        // Image upload functionality
+        function setupImageUpload() {
+            const imageUpload = document.getElementById('imageUpload');
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            
+            let uploadedImages = [];
+            
+            // Drag and drop functionality
+            imageUpload.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                imageUpload.classList.add('dragover');
+            });
+            
+            imageUpload.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                imageUpload.classList.remove('dragover');
+            });
+            
+            imageUpload.addEventListener('drop', function(e) {
+                e.preventDefault();
+                imageUpload.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleImageFiles(files);
+            });
+            
+            // File input change
+            imageInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                handleImageFiles(files);
+            });
+            
+            function handleImageFiles(files) {
+                const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+                
+                if (uploadedImages.length + imageFiles.length > 5) {
+                    showToast('Maximum 5 images allowed', 'error');
+                    return;
+                }
+                
+                imageFiles.forEach(file => {
+                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        showToast(`File ${file.name} is too large. Maximum size is 5MB.`, 'error');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageData = e.target.result;
+                        uploadedImages.push({
+                            file: file,
+                            preview: imageData
+                        });
+                        updateImagePreview();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            function updateImagePreview() {
+                imagePreview.innerHTML = uploadedImages.map((image, index) => `
+                    <div class="preview-item">
+                        <img src="${image.preview}" alt="Preview" class="preview-image">
+                        <button type="button" class="remove-image" onclick="removeImage(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+            
+            window.removeImage = function(index) {
+                uploadedImages.splice(index, 1);
+                updateImagePreview();
+            };
+            
+            // Form submission
+            document.getElementById('addItemForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (uploadedImages.length === 0) {
+                    showToast('Please upload at least one image', 'error');
+                    return;
+                }
+                
+                const formData = new FormData();
+                
+                // Add form fields
+                const formFields = ['title', 'description', 'category', 'size', 'condition', 'pointsValue', 'brand', 'color', 'material'];
+                formFields.forEach(field => {
+                    const value = document.getElementById(field).value;
+                    if (value) {
+                        formData.append(field, value);
+                    }
+                });
+                
+                // Add tags
+                const tags = Array.from(document.querySelectorAll('.tag')).map(tag => tag.textContent.replace('×', '').trim());
+                if (tags.length > 0) {
+                    formData.append('tags', JSON.stringify(tags));
+                }
+                
+                // Add images
+                uploadedImages.forEach(image => {
+                    formData.append('images', image.file);
+                });
+                
+                // Show progress bar
+                progressBar.style.display = 'block';
+                
+                try {
+                    const response = await apiRequest('/api/items', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {} // Let browser set Content-Type for FormData
+                    });
+                    
+                    if (response && response.ok) {
+                        const item = await response.json();
+                        showToast('Item added successfully!', 'success');
+                        setTimeout(() => {
+                            window.location.href = `/item/${item._id}`;
+                        }, 1000);
+                    } else {
+                        const data = await response.json();
+                        showToast(data.message || 'Failed to add item', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error adding item:', error);
+                    showToast('Network error. Please try again.', 'error');
+                } finally {
+                    progressBar.style.display = 'none';
+                }
+            });
+        }
+        
+        // Tags input functionality
+        function setupTagsInput() {
+            const tagInput = document.getElementById('tagInput');
+            const tagsInput = document.getElementById('tagsInput');
+            const tags = [];
+            
+            tagInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const tag = this.value.trim();
+                    
+                    if (tag && !tags.includes(tag) && tags.length < 10) {
+                        tags.push(tag);
+                        updateTags();
+                        this.value = '';
+                    } else if (tags.length >= 10) {
+                        showToast('Maximum 10 tags allowed', 'error');
+                    }
+                }
+            });
+            
+            function updateTags() {
+                const tagElements = tags.map(tag => `
+                    <span class="tag">
+                        ${tag}
+                        <button type="button" class="tag-remove" onclick="removeTag('${tag}')">×</button>
+                    </span>
+                `).join('');
+                
+                tagsInput.innerHTML = tagElements + '<input type="text" class="tag-input" id="tagInput" placeholder="Add tags...">';
+                
+                // Re-attach event listener to new input
+                document.getElementById('tagInput').addEventListener('keydown', tagInput.onkeydown);
+            }
+            
+            window.removeTag = function(tag) {
+                const index = tags.indexOf(tag);
+                if (index > -1) {
+                    tags.splice(index, 1);
+                    updateTags();
+                }
+            };
+        }
+    </script>
+</body>
+</html> 
